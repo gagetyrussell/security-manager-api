@@ -1,6 +1,6 @@
 # serverless.yml
 
-service: mgr-api
+service: security-manager-api
 
 plugins:
   - serverless-python-requirements
