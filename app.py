@@ -87,7 +87,7 @@ def createCognitoUserKey():
         'user_id': request.form.get('userName')
     }
     valid, fields = Validate.validateRequestData(data, required_fields=['email', 'email_verified', 'user_pool_id', 'user_id'])
-    creation = add_user_key(bucket_name="mgr.users.data", user_id=data['user_id'])
+    creation = add_user_key(bucket_name="securitymanager.users", user_id=data['user_id'])
     return str(creation)
 
 @app.route('/getPresignedUserDataUrl', methods=["GET"])
@@ -98,14 +98,14 @@ def getPresignedUserDataUrl():
     }
     valid, fields = Validate.validateRequestData(data, required_fields=['user_id', 'file_name'])
 
-    bucket_name = 'mgr.users.data'
+    bucket_name = 'securitymanager.users'
     timestamp = datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
     s3_name = data['file_name'].split('.')[0] + timestamp
     s3_name = s3_name.replace(' ', '_')
     s3_name = data['user_id'] + '/' + s3_name + '.' + data['file_name'].split('.')[1]
     print(s3_name)
 
-    post_url = create_presigned_post('mgr.users.data', s3_name)
+    post_url = create_presigned_post('securitymanager.users', s3_name)
     print(post_url)
     return Response.jsonResponse(post_url)
 
@@ -115,7 +115,7 @@ def getDataByUser():
     'user_id': request.args.get('user_id'),
     }
     valid, fields = Validate.validateRequestData(data, required_fields=['user_id'])
-    bucket_name = 'mgr.users.data'
+    bucket_name = 'securitymanager.users'
     user_id = data['user_id'] + '/'
     rsp = list_bucket_objects(bucket_name=bucket_name, prefix=user_id)
     reg='\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}'
